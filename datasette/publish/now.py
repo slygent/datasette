@@ -49,6 +49,14 @@ def publish_subcommand(publish):
             extra_options = ""
         extra_options += "--config force_https_urls:on"
 
+        now_json = '''
+{
+  "features": {
+    "cloud": "v1"
+  }
+}
+'''
+        
         with temporary_docker_directory(
             files,
             name,
@@ -69,6 +77,7 @@ def publish_subcommand(publish):
                 "source_url": source_url,
             },
         ):
+            open('now.json', 'w').write(now_json)
             args = []
             if force:
                 args.append("--force")
