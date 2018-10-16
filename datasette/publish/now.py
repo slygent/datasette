@@ -24,6 +24,7 @@ def publish_subcommand(publish):
     @click.option("--spatialite", is_flag=True, help="Enable SpatialLite extension")
     @click.option("--alias", help="Alias URL")
     @click.option("--public", is_flag=True, help="Public?")
+    @click.option("--unzip", is_flag=True, help="Unzip file to get sqlite database")
     def now(
         files,
         metadata,
@@ -45,6 +46,7 @@ def publish_subcommand(publish):
         spatialite,
         alias,
         public,
+        unzip,
     ):
         fail_if_publish_binary_not_installed("now", "Zeit Now", "https://zeit.co/now")
         if extra_options:
@@ -81,6 +83,7 @@ def publish_subcommand(publish):
             install,
             spatialite,
             version_note,
+            unzip,
             {
                 "title": title,
                 "license": license,
