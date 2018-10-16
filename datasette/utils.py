@@ -298,7 +298,10 @@ CMD [{cmd}]'''.format(
     cmd=', '.join(cmd),
     install_from=' '.join(install),
     spatialite_extras=SPATIALITE_DOCKERFILE_EXTRAS if spatialite else '',
-    unzip_extras='RUN unzip {files}'.format(files=' '.join(files)) if unzip else '',
+    unzip_extras='''RUN apt-get update
+RUN apt-get install -y unzip
+RUN unzip {files}
+'''.format(files=' '.join(files)).strip() if unzip else '',
     ).strip()
 
 
