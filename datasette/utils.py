@@ -294,11 +294,11 @@ RUN pip install -U {install_from}
 RUN datasette inspect {files} --inspect-file inspect-data.json
 EXPOSE 8001
 CMD [{cmd}]'''.format(
-    files=' '.join(files),
+    files=' '.join([f.replace(".zip", ".db") for f in files]) if unzip else ' '.join(files),
     cmd=', '.join(cmd),
     install_from=' '.join(install),
     spatialite_extras=SPATIALITE_DOCKERFILE_EXTRAS if spatialite else '',
-    unzip_extras='RUN unzip -q {files}'.format(files=' '.join(files)) if unzip else '',
+    unzip_extras='RUN unzip {files}'.format(files=' '.join(files)) if unzip else '',
     ).strip()
 
 
