@@ -199,6 +199,9 @@ def skeleton(files, metadata, sqlite_extensions):
     "--spatialite", is_flag=True, help="Enable SpatialLite extension"
 )
 @click.option("--version-note", help="Additional note to show on /-/versions")
+@click.option(
+    "--unzip", is_flag=True, help="Unzip file to get sqlite database"
+)
 @click.option("--title", help="Title for metadata")
 @click.option("--license", help="License label for metadata")
 @click.option("--license_url", help="License URL for metadata")
@@ -216,6 +219,7 @@ def package(
     install,
     spatialite,
     version_note,
+    unzip,
     **extra_metadata
 ):
     "Package specified SQLite files into a new datasette Docker container"

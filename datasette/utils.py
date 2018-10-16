@@ -258,7 +258,7 @@ def escape_sqlite(s):
         return '[{}]'.format(s)
 
 
-def make_dockerfile(files, metadata_file, extra_options, branch, template_dir, plugins_dir, static, install, spatialite, version_note):
+def make_dockerfile(files, metadata_file, extra_options, branch, template_dir, plugins_dir, static, install, spatialite, version_note, unzip):
     cmd = ['"datasette"', '"serve"', '"--host"', '"0.0.0.0"']
     cmd.append('"' + '", "'.join(files) + '"')
     cmd.extend(['"--cors"', '"--port"', '"8001"', '"--inspect-file"', '"inspect-data.json"'])
@@ -290,13 +290,15 @@ COPY . /app
 WORKDIR /app
 {spatialite_extras}
 RUN pip install -U {install_from}
+{unzip_extras}
 RUN datasette inspect {files} --inspect-file inspect-data.json
 EXPOSE 8001
 CMD [{cmd}]'''.format(
-        files=' '.join(files),
-        cmd=', '.join(cmd),
-        install_from=' '.join(install),
-        spatialite_extras=SPATIALITE_DOCKERFILE_EXTRAS if spatialite else '',
+    files=' '.join(files),
+    cmd=', '.join(cmd),
+    install_from=' '.join(install),
+    spatialite_extras=SPATIALITE_DOCKERFILE_EXTRAS if spatialite else '',
+    unzip_extras='RUN unzip -q {files}'.format(files=' '.join(files)) if unzip else '',
     ).strip()
 
 
@@ -313,6 +315,7 @@ def temporary_docker_directory(
     install,
     spatialite,
     version_note,
+    unzip,
     extra_metadata=None
 ):
     extra_metadata = extra_metadata or {}
@@ -345,6 +348,7 @@ def temporary_docker_directory(
             install,
             spatialite,
             version_note,
+            unzip,
         )
         os.chdir(datasette_dir)
         if metadata_content:
