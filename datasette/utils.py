@@ -301,6 +301,7 @@ CMD [{cmd}]'''.format(
     unzip_extras='''RUN apt-get update
 RUN apt-get install -y unzip
 RUN unzip {files}
+RUN rm {files}
 '''.format(files=' '.join(files)).strip() if unzip else '',
     ).strip()
 
