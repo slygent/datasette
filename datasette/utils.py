@@ -14,6 +14,7 @@ import time
 import shutil
 import urllib
 import numbers
+import copy
 
 try:
     import pysqlite3 as sqlite3
@@ -260,7 +261,7 @@ def escape_sqlite(s):
 
 def make_dockerfile(files, metadata_file, extra_options, branch, template_dir, plugins_dir, static, install, spatialite, version_note, unzip):
     if unzip:
-        zipfiles = copy(files)
+        zipfiles = copy.copy(files)
         files = [f.replace(".zip", ".db") for f in files]
     cmd = ['"datasette"', '"serve"', '"--host"', '"0.0.0.0"']
     cmd.append('"' + '", "'.join(files) + '"')
