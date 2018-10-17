@@ -101,9 +101,9 @@ def publish_subcommand(publish):
             if public:
                 args.append("--public")
             if args:
-                call(["now"] + args)
+                call(["now", "--no-verify"] + args)
             else:
-                call("now")
+                call(["now", "--no-verify"])
 
             if alias:
                 call(["now", "alias"])
