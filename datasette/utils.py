@@ -259,6 +259,9 @@ def escape_sqlite(s):
 
 
 def make_dockerfile(files, metadata_file, extra_options, branch, template_dir, plugins_dir, static, install, spatialite, version_note, unzip):
+    if unzip:
+        zipfiles = copy(files)
+        files = [f.replace(".zip", ".db") for f in files]
     cmd = ['"datasette"', '"serve"', '"--host"', '"0.0.0.0"']
     cmd.append('"' + '", "'.join(files) + '"')
     cmd.extend(['"--cors"', '"--port"', '"8001"', '"--inspect-file"', '"inspect-data.json"'])
@@ -294,15 +297,15 @@ RUN pip install -U {install_from}
 RUN datasette inspect {files} --inspect-file inspect-data.json
 EXPOSE 8001
 CMD [{cmd}]'''.format(
-    files=' '.join([f.replace(".zip", ".db") for f in files]) if unzip else ' '.join(files),
+    files=' '.join(files),
     cmd=', '.join(cmd),
     install_from=' '.join(install),
     spatialite_extras=SPATIALITE_DOCKERFILE_EXTRAS if spatialite else '',
     unzip_extras='''RUN apt-get update
 RUN apt-get install -y unzip
-RUN unzip {files}
-RUN rm {files}
-'''.format(files=' '.join(files)).strip() if unzip else '',
+RUN unzip {zipfiles}
+RUN rm {zipfiles}
+'''.format(zipfiles=' '.join(zipfiles)).strip() if unzip else '',
     ).strip()
 
 
