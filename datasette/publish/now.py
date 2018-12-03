@@ -57,13 +57,17 @@ def publish_subcommand(publish):
 
         if alias:
             now_json = '''{
-            "version": 1,
+    "features": {
+        "cloud": "v1"
+    },
     "alias": "''' + alias + '''"
 }
 '''
         else:
             now_json = '''{
-        "version": 1
+    "features": {
+        "cloud": "v1"
+    }
 }
 '''
         
